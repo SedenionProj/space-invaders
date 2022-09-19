@@ -42,9 +42,10 @@ class Entity:
                 placerPixel(x+self.x,y+self.y,self.__class__.tex[y][x])
         
 class Ship(Entity):
-    tex =  ["  #  ",
-            "# # #",
-            "#####"]
+    tex =  ["    ^    ",
+            " |  #  | ",
+            "<##---##>",
+            "   ###   "]
 
 class Bullet(Entity):
     def __init__(self,x,y):
@@ -54,10 +55,14 @@ class Bullet(Entity):
             "#"]
 
 class Mob(Entity):
-    pass
+    tex =  ["   #   #   ",
+            " ## ### ## ",
+            "###########",
+            "# ##   ## #",
+            "   ## ##   "]
     
-p1 = Ship(longueur//2,largeur*3/4)
-b1 = Bullet(p1.x,p1.y)
+p1 = Ship(longueur//2,largeur*3//4)
+b1 = Bullet(p1.x+4,p1.y)
 
 while True:
     actuelle = time.time()
@@ -66,12 +71,12 @@ while True:
     supprimer()
     
     if keyboard.is_pressed("up arrow"):
-        b1.velY=-10
+        b1.velY=-30
         b1.shot = True
     elif b1.shot:
         pass
     else:
-        b1.x = p1.x
+        b1.x = p1.x+4
 
     if keyboard.is_pressed("left arrow"):
         p1.velX-=speed
