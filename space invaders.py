@@ -6,6 +6,7 @@ longueur, largeur = os.get_terminal_size()
 image = [[' ' for _ in range(longueur)] for _ in range(largeur)]
 dernier = time.time()
 speed = 1
+largeur-=2
 
 def placerPixel(x,y,char):
     x1=round(x)
@@ -13,12 +14,14 @@ def placerPixel(x,y,char):
     if 0<=x1<=longueur-1 and 0<=y1<=largeur-1:
         image[y1][x1]=char
 
-def afficher():
-    strImage=' '*longueur
+def afficher(*info):
+    info="".join(info)
+    info+=' '*(longueur-len(info))
+    strImage=''
     for y in range(largeur):
         for x in range(longueur):
             strImage+=image[y][x]
-    print(strImage,end='')
+    print(info+strImage,end='')
 
 def supprimer():
     for y in range(largeur):
@@ -49,10 +52,15 @@ class Ship(Entity):
 
 class Bullet(Entity):
     def __init__(self,x,y):
-        Entity.__init__(self,x,y)
+        super().__init__(x,y)
         self.shot = False
     tex =  ["#",
             "#"]
+    def reset(self,x,y):
+        self.x = x+4
+        self.y = y
+        self.shot = False
+        self.velY = 0
 
 class Mob(Entity):
     tex =  ["   #   #   ",
@@ -60,9 +68,17 @@ class Mob(Entity):
             "###########",
             "# ##   ## #",
             "   ## ##   "]
-    
+    def update(self, dt):
+        return super().update(dt)
+    def collision(self,x,y):
+        if self.x<x<self.x+len(self.__class__.tex[0]) and self.y<y<self.y+len(self.__class__.tex):
+            return True
+        return False
+
 p1 = Ship(longueur//2,largeur*3//4)
 b1 = Bullet(p1.x+4,p1.y)
+m1 = Mob(longueur//2,10)
+fps=0
 
 while True:
     actuelle = time.time()
@@ -87,11 +103,28 @@ while True:
             p1.velX -= speed
         if p1.velX<0:
             p1.velX += speed
+
+    if b1.y < 0:
+        b1.reset(p1.x,p1.y)
+
+    if m1.collision(b1.x,b1.y):
+        b1.reset(p1.x,p1.y)
+        m1.delete()
+
+
     p1.update(dt)
     p1.draw()
     b1.update(dt)
     b1.draw()
+    try:
+        m1.update(dt)
+        m1.draw()
+    except:
+        pass
     
     #placerPixel(p1.x,p1.y,'#')
 
-    afficher()
+    if dt != 0:
+        fps = 1/dt
+
+    afficher(str(round(fps)))
