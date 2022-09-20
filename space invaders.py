@@ -2,30 +2,30 @@ import time
 import os
 import keyboard
 
-longueur, largeur = os.get_terminal_size()
-image = [[' ' for _ in range(longueur)] for _ in range(largeur)]
+width, height = os.get_terminal_size()
+image = [[' ' for _ in range(width)] for _ in range(height)]
 dernier = time.time()
 speed = 1
-largeur-=2
+height-=2
 
 def placerPixel(x,y,char):
     x1=round(x)
     y1=round(y)
-    if 0<=x1<=longueur-1 and 0<=y1<=largeur-1:
+    if 0<=x1<=width-1 and 0<=y1<=height-1:
         image[y1][x1]=char
 
 def afficher(*info):
     info="".join(info)
-    info+=' '*(longueur-len(info))
+    info+=' '*(width-len(info))
     strImage=''
-    for y in range(largeur):
-        for x in range(longueur):
+    for y in range(height):
+        for x in range(width):
             strImage+=image[y][x]
     print(info+strImage,end='')
 
 def supprimer():
-    for y in range(largeur):
-        for x in range(longueur):
+    for y in range(height):
+        for x in range(width):
             image[y][x]=' '
 
 class Entity:
@@ -63,21 +63,38 @@ class Bullet(Entity):
         self.velY = 0
 
 class Mob(Entity):
+    tex =  ["#"]
+    def update(self, dt):
+        return super().update(dt)
+    def collision(self,x,y):
+        if self.x-0.5<x<self.x+len(self.__class__.tex[0]) and self.y<y<self.y+len(self.__class__.tex):
+            return True
+        return False
+
+class Mob1(Mob):
     tex =  ["   #   #   ",
             " ## ### ## ",
             "###########",
             "# ##   ## #",
-            "   ## ##   "]
-    def update(self, dt):
-        return super().update(dt)
-    def collision(self,x,y):
-        if self.x<x<self.x+len(self.__class__.tex[0]) and self.y<y<self.y+len(self.__class__.tex):
-            return True
-        return False
+            "   ## ##   "]   
+class Mob2(Mob):
+    tex =  ["     #     ",
+            "   #####   ",
+            " ## ### ## ",
+            "###########",
+            " #       # "]
+class Mob3(Mob):
+    tex =  ["     #     ",
+            " ######### ",
+            "##  ###  ##",
+            "##### #####",
+            "  #  #  #  "]
 
-p1 = Ship(longueur//2,largeur*3//4)
+p1 = Ship(width//2,height*3//4)
 b1 = Bullet(p1.x+4,p1.y)
-m1 = Mob(longueur//2,10)
+mobs = [Mob1(15*i+width//2,height//10) for i in range(-5,5)]
+mobs = mobs+[Mob2(15*i+width//2,mobs[0].y+10) for i in range(-5,5)]
+mobs = mobs+[Mob3(15*i+width//2,mobs[0].y+20) for i in range(-5,5)]
 fps=0
 
 while True:
@@ -107,22 +124,17 @@ while True:
     if b1.y < 0:
         b1.reset(p1.x,p1.y)
 
-    if m1.collision(b1.x,b1.y):
-        b1.reset(p1.x,p1.y)
-        m1.delete()
-
-
     p1.update(dt)
     p1.draw()
     b1.update(dt)
     b1.draw()
-    try:
-        m1.update(dt)
-        m1.draw()
-    except:
-        pass
     
-    #placerPixel(p1.x,p1.y,'#')
+    for mob in mobs:
+        if mob.collision(b1.x,b1.y):
+            b1.reset(p1.x,p1.y)
+            mobs.remove(mob)
+        else:
+            mob.draw()
 
     if dt != 0:
         fps = 1/dt
