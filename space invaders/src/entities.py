@@ -1,5 +1,4 @@
-import space_invaders
-
+import screen
 class Entity:
     tex =  ["#"]
     def __init__(self,x,y):
@@ -14,7 +13,7 @@ class Entity:
     def draw(self):
         for y in range(len(self.__class__.tex)):
             for x in range(len(self.__class__.tex[0])):
-                space_invaders.placerPixel(x+self.x,y+self.y,self.__class__.tex[y][x])
+                screen.placerPixel(x+self.x,y+self.y,self.__class__.tex[y][x])
         
 class Ship(Entity):
     tex =  ["    ^    ",
