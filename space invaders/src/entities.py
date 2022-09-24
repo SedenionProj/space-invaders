@@ -1,8 +1,7 @@
-from html import entities
 import src.screen as screen
 
 class Entity:
-    tex =  ["#"]
+    tex =  ["█"]
     def __init__(self,x,y):
         self.x = x
         self.y = y
@@ -19,9 +18,9 @@ class Entity:
         
 class Ship(Entity):
     tex =  ["    ^    ",
-            " |  #  | ",
-            "<##---##>",
-            "   ###   "]
+            " |  █  | ",
+            "<██---██>",
+            "   ███   "]
     maxSpeed = 100
     def update(self, dt):
         
@@ -35,8 +34,8 @@ class Bullet(Entity):
     def __init__(self,x,y):
         super().__init__(x,y)
         self.shot = False
-    tex =  ["#",
-            "#"]
+    tex =  ["█",
+            "█"]
     def reset(self,x,y):
         self.x = x+4
         self.y = y
@@ -44,7 +43,7 @@ class Bullet(Entity):
         self.velY = 0
 
 class Mob(Entity):
-    tex =  ["#"]
+    tex =  ["█"]
     def update(self, dt):
         return super().update(dt)
     def collision(self,x,y):
@@ -53,23 +52,23 @@ class Mob(Entity):
         return False
 
 class Mob1(Mob):
-    tex =  ["   #   #   ",
-            " ## ### ## ",
-            "###########",
-            "# ##   ## #",
-            "   ## ##   "]   
+    tex =  ["  ▀█   █▀  ",
+            " ██ ███ ██ ",
+            "███████████",
+            "█ ██   ██ █",
+            "   ██ ██   "]
 class Mob2(Mob):
-    tex =  ["     #     ",
-            "   #####   ",
-            " ## ### ## ",
-            "###########",
-            " #       # "]
+    tex =  ["    ▄█▄    ",
+            "  ▄█████▄  ",
+            "▄██ ███ ██▄",
+            "███▀███▀███",
+            " █       █ "]
 class Mob3(Mob):
-    tex =  ["     #     ",
-            " ######### ",
-            "##  ###  ##",
-            "##### #####",
-            "  #  #  #  "]
+    tex =  ["    ▄█▄    ",
+            "▄█████████▄",
+            "██  ███  ██",
+            "█████ █████",
+            "  █  █  █  "]
 
 class texte(Entity):
     tex =[["███████╗██████╗  █████╗  ██████╗███████╗        ██╗███╗   ██╗██╗   ██╗ █████╗ ██████╗ ███████╗██████╗ ███████╗",
