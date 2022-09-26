@@ -1,3 +1,4 @@
+from functools import total_ordering
 import keyboard
 from random import randint
 import src.entities as entities
@@ -14,12 +15,27 @@ text = entities.texte(10,10)
 vel_mob = 1
 score = 0
 level = 0
+total_score = 0
+
+def reset():
+    global mobs
+    global score
+    global level
+    global total_score
+    global vel_mob
+    mobs.clear()
+    score = 0
+    level = 0
+    total_score = 0
+    vel_mob = 1
 
 def gameLoop(dt):
     global vel_mob
     global score
     global level
     global mobs
+    global total_score
+    global running
     if keyboard.is_pressed("up arrow"):
         b1.velY=-30
         b1.shot = True
@@ -27,7 +43,9 @@ def gameLoop(dt):
         pass
     else:
         b1.x = p1.x+4
-
+    if keyboard.is_pressed("f"):
+        for mob in mobs:
+            mobs.remove(mob)
     if keyboard.is_pressed("left arrow"):
         if p1.velX > -entities.Ship.maxSpeed:
             p1.velX-=speed
@@ -44,35 +62,52 @@ def gameLoop(dt):
     p1.draw()
     b1.update(dt)
     b1.draw()
-    text.set(str(score),0,1)
+    text.set(str(total_score),0,1)
     text.set(str(level),0,2)
 
     if len(mobs)==0:
         level+=1
-        mobs = mobs+[entities.Mob1(15*i+screen.width//2,5) for i in range(-5,5)]
+        mobs = mobs+[entities.Mob1(15*i+screen.width//2,3) for i in range(-5,5)]
         mobs = mobs+[entities.Mob2(15*i+screen.width//2,mobs[0].y+10) for i in range(-5,5)]
         mobs = mobs+[entities.Mob3(15*i+screen.width//2,mobs[0].y+20) for i in range(-5,5)]
         p1.x=screen.width//2
         p1.y=screen.height-5;
+        score = 0
 
     for mob in mobs:
-        mob.x+=dt*5*vel_mob*score/10
-        if mob.collision(b1.x,b1.y):
+        mob.x+=level*dt*5*vel_mob*score/10
+        if mob.y > screen.height:
+            running = 3
+        if mob.collision(b1.x,b1.y) and b1.shot:
             b1.reset(p1.x,p1.y)
             mobs.remove(mob)
             if type(mob)==entities.Mob1:
                 score+=3
+                total_score +=3
             if type(mob)==entities.Mob2:
                 score+=2
+                total_score +=2
             if type(mob)==entities.Mob3:
                 score+=1
+                total_score +=1
+            
         else:
             mob.draw()
-        if mob.x>screen.width-9 or mob.x<=0:
+        if mob.x>=screen.width-10 or mob.x<=0:
             for mob1 in mobs:
                 mob1.y += 2
             vel_mob *= -1
             mob.x += vel_mob
+
+def deathScreen(dt):
+    global running
+    text.draw(5,text.getCenterX(5),screen.height/4)
+    text.draw(4,text.getCenterX(5),text.y+15)
+    if keyboard.is_pressed("enter"):
+        if keyboard.read_key() == "enter":
+            running = 1
+            reset()
+        
 
 
 def intro(dt):

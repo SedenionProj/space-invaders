@@ -20,8 +20,10 @@ if __name__ == "__main__":
             main.menu(dt)
         if main.running == 2:
             main.gameLoop(dt)
+        if main.running == 3:
+            main.deathScreen(dt)
 
         if dt != 0:
             fps = 1/dt
 
-        screen.afficher("fps :",str(round(fps)))
+        screen.afficher("fps :",str(round(fps)),str(main.mobs)[1])
