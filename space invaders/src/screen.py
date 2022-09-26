@@ -6,6 +6,15 @@ width, height = os.get_terminal_size()
 image = [[' ' for _ in range(width)] for _ in range(height)]
 height-=1
 
+def resize():
+    global image
+    global width
+    global height
+    width, height = os.get_terminal_size()
+    image = [[' ' for _ in range(width)] for _ in range(height)]
+    height-=1
+    os.system('cls')
+
 def placerPixel(x,y,char):
     x1=round(x)
     y1=round(y)

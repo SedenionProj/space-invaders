@@ -27,5 +27,5 @@ if __name__ == "__main__":
         if dt != 0:
             fps = 1/dt
 
-        msg = "info :"+ "fps : "+str(round(fps))
+        msg = "info :"+ "fps : "+str(round(fps))+' w : '+str(screen.width)+' h : '+str(screen.height+1)
         screen.afficher(msg)

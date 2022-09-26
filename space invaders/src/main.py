@@ -1,8 +1,8 @@
 import keyboard
-#keyboard.press('f11')
 from random import randint
 import src.entities as entities
 import src.screen as screen
+
 speed = 5
 running = 0
 
@@ -161,14 +161,18 @@ def menu(dt):
         if id_play == 3:
             running = 2
         if id_menu == 4:
-            text.set("texte",100,40)
-    if screen.width>235 or screen.height>62:
-        text.set("WARNING la taille de l'écran est incorrecte, vérifiez dans les paramètre qu'elle correspond à 235px/62px",screen.width//2,text.x)
-    
+            screen.resize()
+            text.set("écran recadré",100,40)
+
+    if screen.width!=240 or screen.height!=61:
+        screen.resize()
+        text.set("WARNING la taille de l'écran est incorrecte, vérifiez dans les paramètre qu'elle correspond à 240px/62px",screen.width//2,text.y+20)
+
     for _ in range(10):
         screen.placerPixel(randint(0,screen.width),randint(0,screen.height),".")
-    
     
     text.draw(0,10,10)
     text.draw(id_play,10,text.y+10)
     text.draw(id_menu,10,text.y+10)
+
+    
