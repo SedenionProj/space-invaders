@@ -124,7 +124,7 @@ class texte(Entity):
         i=0
         for letter in text:
             i+=1
-            screen.placerPixel(x+i,y,letter)
+            screen.placerPixel(x+i-1,y,letter)
 
     def getCenterX(self,id):
         return (screen.width-len(self.__class__.tex[id][0]))//2

@@ -1,9 +1,11 @@
 import os
+os.system('mode con: cols=235 lines=62')
 
 width, height = os.get_terminal_size()
 
 image = [[' ' for _ in range(width)] for _ in range(height)]
-height-=2
+height-=1
+
 def placerPixel(x,y,char):
     x1=round(x)
     y1=round(y)

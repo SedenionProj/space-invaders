@@ -4,6 +4,7 @@ import src.main as main
 
 dernier = time.time()
 fps=0
+msg = ""
 
 if __name__ == "__main__":
     while True:
@@ -26,4 +27,5 @@ if __name__ == "__main__":
         if dt != 0:
             fps = 1/dt
 
-        screen.afficher("fps :",str(round(fps)),str(main.mobs)[1])
+        msg = "info :"+ "fps : "+str(round(fps))
+        screen.afficher(msg)
