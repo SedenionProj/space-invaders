@@ -131,7 +131,7 @@ def intro(dt):
     r+=dt*10
     if r**2 > screen.width-100:
         r1+=dt*100
-    if screen.height-int(r1)==0:
+    if screen.height-int(r1)<=0:
         running = 1      
     for y in range(screen.height-int(r1)):
         for x in range(screen.width):
@@ -166,7 +166,7 @@ def menu(dt):
 
     if screen.width!=240 or screen.height!=61:
         screen.resize()
-        text.set("WARNING la taille de l'écran est incorrecte, vérifiez dans les paramètre qu'elle correspond à 240px/62px",screen.width//2,text.y+20)
+        text.set("WARNING la taille de l'écran est incorrecte, vérifiez dans les paramètre qu'elle correspond à 240px/62px",screen.width//2,text.y+10)
 
     for _ in range(10):
         screen.placerPixel(randint(0,screen.width),randint(0,screen.height),".")
