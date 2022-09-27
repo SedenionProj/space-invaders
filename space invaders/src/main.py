@@ -3,21 +3,24 @@ from random import randint
 import src.entities as entities
 import src.screen as screen
 
-speed = 5
-running = 0
+speed = 5           #vitesse joueur
+running = 0         #fenêtre actuelle
 
-p1 = entities.Ship(screen.width//2,screen.height-5)
-b1 = entities.Bullet(p1.x+4,p1.y)
-mobs = []
+p1 = entities.Ship(screen.width//2,screen.height-5)          #joueur
+b1 = entities.Bullet(p1.x+4,p1.y)                            #balle
+mobs = []                                                    #méchants
 
-text = entities.texte(10,10)
+text = entities.texte(10,10)                                 #text
 vel_mob = 1
+
+#statistiques
 score = 0
 level = 0
 total_score = 0
 life = 3
 
 def reset():
+    #reinitialisation partie
     global mobs
     global score
     global level
@@ -32,6 +35,7 @@ def reset():
     life = 3
 
 def gameLoop(dt):
+    #boucle principale du jeu
     global vel_mob
     global score
     global level
@@ -39,7 +43,9 @@ def gameLoop(dt):
     global total_score
     global running
     global life
-    if keyboard.is_pressed("up arrow"):
+    
+    
+    if keyboard.is_pressed("up arrow"):         #clavier
         b1.velY=-30
         b1.shot = True
     elif b1.shot:
@@ -79,7 +85,7 @@ def gameLoop(dt):
         b1.y = p1.y
         score = 0
     
-    for mob in mobs:
+    for mob in mobs:            #executé pour chaque méchants
         mob.x+=level*dt*5*vel_mob*score/10
         if mob.y > screen.height:
             life-=1
@@ -111,6 +117,7 @@ def gameLoop(dt):
         running = 3
 
 def deathScreen(dt):
+    #fenêtre quand je joueur a perdu
     global running
     text.draw(5,text.getCenterX(5),screen.height/4)
     text.set('score : '+str(total_score),text.getCenterX(5),text.y+15)
@@ -124,6 +131,7 @@ def deathScreen(dt):
 
 
 def intro(dt):
+    #animation executée le debut du programme
     global running
     global r
     global r1
@@ -147,11 +155,12 @@ id_play = 1
 id_menu = 2
 
 def menu(dt):
+    #menu
     global id_play
     global id_menu
     global running
 
-    if keyboard.is_pressed("up arrow"):
+    if keyboard.is_pressed("up arrow"):        #clavier
         id_play = 3
         id_menu = 2
     elif keyboard.is_pressed("down arrow"):
@@ -164,11 +173,11 @@ def menu(dt):
             screen.resize()
             text.set("écran recadré",100,40)
 
-    if screen.width!=240 or screen.height!=61:
+    if screen.width!=240 or screen.height!=61:  #recadrage de l'écran
         screen.resize()
         text.set("WARNING la taille de l'écran est incorrecte, vérifiez dans les paramètre qu'elle correspond à 240px/62px",screen.width//2,text.y+10)
 
-    for _ in range(10):
+    for _ in range(10):                         #particules
         screen.placerPixel(randint(0,screen.width),randint(0,screen.height),".")
     
     text.draw(0,10,10)
