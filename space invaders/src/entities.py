@@ -130,4 +130,14 @@ class texte(Entity):
         return (screen.width-len(self.__class__.tex[id][0]))//2
 
 class Explosion:
-    pass
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+        self.r = 0
+
+    def update(self,dt):
+        self.r += dt
+        for y in range(self.y,self.y + round(self.r)):
+            for x in range(self.x,self.x + round(self.r)):
+                if (x-2)**2+(y-2)**2<self.r**2:
+                    screen.placerPixel(x,y,'#')

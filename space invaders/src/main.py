@@ -1,5 +1,6 @@
 import keyboard
 from random import randint
+
 import src.entities as entities
 import src.screen as screen
 
@@ -9,6 +10,7 @@ running = 0         #fenêtre actuelle
 p1 = entities.Ship(screen.width//2,screen.height-5)          #joueur
 b1 = entities.Bullet(p1.x+4,p1.y)                            #balle
 mobs = []                                                    #méchants
+explosions = [] 
 
 text = entities.texte(10,10)                                 #text
 vel_mob = 1
@@ -94,6 +96,7 @@ def gameLoop(dt):
             break
         if mob.collision(b1.x,b1.y) and b1.shot:
             b1.reset(p1.x,p1.y)
+            explosions.append(entities.Explosion(mob.x,mob.y))
             mobs.remove(mob)
             if type(mob)==entities.Mob1:
                 score+=3
@@ -105,6 +108,11 @@ def gameLoop(dt):
                 score+=1
                 total_score +=1
             
+        for explos in explosions:
+            explos.update(dt)
+            if explos.r > 10:
+                explosions.remove(explos)
+
         else:
             mob.draw()
         if mob.x>=screen.width-10 or mob.x<=0:
