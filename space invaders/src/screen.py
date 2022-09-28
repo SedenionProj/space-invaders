@@ -1,10 +1,17 @@
 import os
-os.system('mode con: cols=235 lines=62')
 
 width, height = os.get_terminal_size()
 
 image = [[' ' for _ in range(width)] for _ in range(height)]
-height-=1
+height-=2
+
+def installPKG():
+    print('Installing keybord module...')
+    os.pip.main(['install', "keyboard"])
+
+def autoresize():
+    os.system('mode con: cols=240 lines=62')
+    resize()
 
 def resize():
     global image

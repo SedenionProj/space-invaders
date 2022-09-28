@@ -12,7 +12,6 @@ if __name__ == "__main__":
         dt=actuelle-dernier
         dernier = actuelle
 
-
         screen.supprimer()
 
         if main.running == 0:
@@ -27,5 +26,5 @@ if __name__ == "__main__":
         if dt != 0:
             fps = 1/dt
 
-        msg = "info :"+ "fps : "+str(round(fps))+' w : '+str(screen.width)+' h : '+str(screen.height+1)
+        msg = "(info)"+' w: '+str(screen.width)+'px h: '+str(screen.height+1)+ "px, fps : "+str(round(fps))
         screen.afficher(msg)

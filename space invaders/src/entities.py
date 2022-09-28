@@ -1,3 +1,4 @@
+from random import randint
 import src.screen as screen
 
 class Entity:
@@ -112,7 +113,22 @@ class texte(Entity):
            "  ░   ░   ▒   ▒▒ ░░  ░      ░ ░ ░  ░        ░ ▒ ▒░    ░ ░░   ░ ░  ░  ░▒ ░ ▒░",
            "░ ░   ░   ░   ▒   ░      ░      ░         ░ ░ ░ ▒       ░░     ░     ░░   ░ ",
            "      ░       ░  ░       ░      ░  ░          ░ ░        ░     ░  ░   ░     ",
-           "                                                        ░                   "]]
+           "                                                        ░                   "],
+          ["   ___        _   _             ",
+           "  / _ \ _ __ | |_(_) ___  _ __  ",
+           " | | | | '_ \| __| |/ _ \| '_ \ ",
+           " | |_| | |_) | |_| | (_) | | | |",
+           "  \___/| .__/ \__|_|\___/|_| |_|",
+           "       |_|                      "],
+          ["███████████████████████████████████",
+           "█   ___        _   _              █",
+           "█  / _ \ _ __ | |_(_) ___  _ __   █",
+           "█ | | | | '_ \| __| |/ _ \| '_ \  █",
+           "█ | |_| | |_) | |_| | (_) | | | | █",
+           "█  \___/| .__/ \__|_|\___/|_| |_| █",
+           "█       |_|                       █",
+           "█                                 █",
+           "███████████████████████████████████"]]
     def draw(self,id,x,y):
         self.x = x
         self.y = y
@@ -136,8 +152,10 @@ class Explosion:
         self.r = 0
 
     def update(self,dt):
-        self.r += dt
-        for y in range(self.y,self.y + round(self.r)):
-            for x in range(self.x,self.x + round(self.r)):
-                if (x-2)**2+(y-2)**2<self.r**2:
-                    screen.placerPixel(x,y,'#')
+        self.r += dt*30
+        for y in range(round(-0.5*self.r),round(0.5*self.r)):
+            for x in range(round(-self.r),round(self.r)):
+                if 0.5*x**2+y**2<0.3*self.r**2:
+                    char = randint(0,15)
+                    if char<3:
+                        screen.placerPixel(self.x+x+5,self.y+y+3,'-|+'[char])

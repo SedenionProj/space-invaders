@@ -1,8 +1,17 @@
-import keyboard
-from random import randint
-
-import src.entities as entities
 import src.screen as screen
+try:
+    import keyboard
+except:
+    screen.installPKG()
+    try:
+        import keyboard
+    except:
+        print('installation du module keyboard à échoué,\nregardez votre connexion internet ou, executez en tant qu\'administrateur,\nou essayez : pip install keybord')
+        input()
+
+from random import randint
+import src.entities as entities
+
 
 speed = 5           #vitesse joueur
 running = 0         #fenêtre actuelle
@@ -48,14 +57,14 @@ def gameLoop(dt):
     
     
     if keyboard.is_pressed("up arrow"):         #clavier
-        b1.velY=-30
+        b1.velY=-min(30+level*4,70)
         b1.shot = True
     elif b1.shot:
         pass
     else:
         b1.x = p1.x+4
     if keyboard.is_pressed("f"):
-        life = 0
+        mobs.clear()
     if keyboard.is_pressed("left arrow"):
         if p1.velX > -entities.Ship.maxSpeed:
             p1.velX-=speed
@@ -87,8 +96,10 @@ def gameLoop(dt):
         b1.y = p1.y
         score = 0
     
-    for mob in mobs:            #executé pour chaque méchants
-        mob.x+=level*dt*5*vel_mob*score/10
+    for mob in mobs: #executé pour chaque méchants
+        if len(mobs)==1:
+            mob.x+=vel_mob*0.5
+        mob.x+=vel_mob*min(1.2,level*dt*5*score/10)
         if mob.y > screen.height:
             life-=1
             level-=1
@@ -107,12 +118,6 @@ def gameLoop(dt):
             if type(mob)==entities.Mob3:
                 score+=1
                 total_score +=1
-            
-        for explos in explosions:
-            explos.update(dt)
-            if explos.r > 10:
-                explosions.remove(explos)
-
         else:
             mob.draw()
         if mob.x>=screen.width-10 or mob.x<=0:
@@ -120,7 +125,10 @@ def gameLoop(dt):
                 mob1.y += 2
             vel_mob *= -1
             mob.x += vel_mob
-
+    for explosion in explosions:
+                explosion.update(dt)
+                if explosion.r > 10:
+                    explosions.remove(explosion)
     if life <= 0:
         running = 3
 
@@ -160,7 +168,7 @@ r1=0
 r2=0
 
 id_play = 1
-id_menu = 2
+id_menu = 6
 
 def menu(dt):
     #menu
@@ -170,20 +178,27 @@ def menu(dt):
 
     if keyboard.is_pressed("up arrow"):        #clavier
         id_play = 3
-        id_menu = 2
+        id_menu = 6
     elif keyboard.is_pressed("down arrow"):
         id_play = 1
-        id_menu = 4
+        id_menu = 7
     if keyboard.is_pressed("enter"):
         if id_play == 3:
-            running = 2
-        if id_menu == 4:
-            screen.resize()
-            text.set("écran recadré",100,40)
+            if screen.width!=240 or screen.height!=61:
+                text.set("veuillez recadrer l'écran",50,text.y-3)
+            else:
+                running = 2
+        if id_menu == 7:
+            screen.autoresize()
+            text.set("écran recadré",50,text.y-3)
+
+    if id_menu == 7:
+        screen.resize()
+        text.set("le recadrage automatique est activé",50,text.y-5)
+        text.set("appuyez sur entrer pour cadrer correctement",50,text.y-4)
 
     if screen.width!=240 or screen.height!=61:  #recadrage de l'écran
-        screen.resize()
-        text.set("WARNING la taille de l'écran est incorrecte, vérifiez dans les paramètre qu'elle correspond à 240px/62px",screen.width//2,text.y+10)
+        text.set("WARNING la taille de l'écran est incorrecte, vérifiez dans les options",50,text.y-10)  
 
     for _ in range(10):                         #particules
         screen.placerPixel(randint(0,screen.width),randint(0,screen.height),".")
