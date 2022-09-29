@@ -1,6 +1,9 @@
 import src.screen as screen
 from random import randint
 import src.entities as entities
+from playsound import playsound
+
+playsound('src/ambient_loop.mp3',False)
 
 try:  # cherche si le module est est déjà installé
     import keyboard
@@ -56,15 +59,26 @@ def gameLoop(dt):
     global running
     global life
 
+    for _ in range(10):  # particules
+        screen.placerPixel(
+            randint(
+                0, screen.width), randint(
+                0, screen.height), "°")
+
     if keyboard.is_pressed("up arrow"):  # clavier
+        if b1.y == p1.y:
+            playsound('src/laser.wav',False)
         b1.velY = -min(30 + level * 4, 70)
         b1.shot = True
+
     elif b1.shot:
         pass
     else:
         b1.x = p1.x + 4
     if keyboard.is_pressed("f"):
         mobs.clear()
+    if keyboard.is_pressed("g"):
+        life-=1
     if keyboard.is_pressed("left arrow"):
         if p1.velX > -entities.Ship.maxSpeed:
             p1.velX -= speed
